@@ -6,23 +6,23 @@
   <title>Our Test Ad</title>
   <meta name="description" content="Shop now">
 
-  <!-- Open Graph / Facebook + general -->
+  <!-- Open Graph (works for X/Facebook/etc.) -->
   <meta property="og:title" content="Our Test Ad">
   <meta property="og:description" content="Shop now">
   <meta property="og:image" content="https://i.ibb.co/tw7CxL7C/image.png">
-  <meta property="og:image:width" content="1200">   <!-- recommended: helps X/FB scale properly -->
-  <meta property="og:image:height" content="630">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630"> <!-- Adjust if your image dimensions differ -->
   <meta property="og:url" content="https://powerful122.github.io/Test-Ad/">
   <meta property="og:type" content="website">
 
-  <!-- Twitter/X specific -->
+  <!-- Twitter/X specific (summary_large_image = big preview image) -->
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Our Test Ad">
   <meta name="twitter:description" content="Shop now">
   <meta name="twitter:image" content="https://i.ibb.co/tw7CxL7C/image.png">
 
-  <!-- Auto-redirect after 2 seconds (X bot reads faster than this) -->
-  <meta http-equiv="refresh" content="2; url=https://enkaare.com">
+  <!-- Short delay redirect: X crawler reads fast (<1s), users get redirected after 3s -->
+  <meta http-equiv="refresh" content="3; url=https://enkaare.com">
 
   <style>
     body {
@@ -39,29 +39,24 @@
     }
     img {
       max-width: 90%;
-      max-height: 70vh;
+      max-height: 75vh;
       height: auto;
-      border-radius: 8px;
+      border-radius: 10px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
     }
     .button {
-      margin-top: 25px;
-      padding: 15px 40px;
-      background: #ffffff;
+      margin-top: 30px;
+      padding: 16px 50px;
+      background: #fff;
       color: #000;
       text-decoration: none;
       font-weight: bold;
-      font-size: 1.2em;
-      border-radius: 8px;
-      transition: background 0.3s;
+      font-size: 1.4em;
+      border-radius: 50px;
+      transition: all 0.3s;
     }
-    .button:hover {
-      background: #e0e0e0;
-    }
-    .notice {
-      margin-top: 20px;
-      font-size: 0.9em;
-      color: #aaa;
-    }
+    .button:hover { background: #ddd; transform: scale(1.05); }
+    .notice { margin-top: 20px; font-size: 1em; color: #ccc; }
   </style>
 </head>
 <body>
@@ -69,13 +64,10 @@
 
   <a href="https://enkaare.com" class="button">SHOP NOW</a>
 
-  <p class="notice">Redirecting to enkaare.com in a few seconds... or click above.</p>
+  <p class="notice">Redirecting automatically in a few seconds... or click SHOP NOW.</p>
 
-  <!-- Optional: Fallback JS redirect if meta fails (some browsers block meta refresh) -->
   <script>
-    setTimeout(function() {
-      window.location.href = "https://enkaare.com";
-    }, 2000);
+    setTimeout(() => { window.location.href = "https://enkaare.com"; }, 3000);
   </script>
 </body>
 </html>
