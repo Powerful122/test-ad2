@@ -1,73 +1,345 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Our Test Ad</title>
-  <meta name="description" content="Shop now">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enkaare - Experience the Flow</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #2f7983;
+            --accent: #ffffff;
+        }
 
-  <!-- Open Graph (works for X/Facebook/etc.) -->
-  <meta property="og:title" content="Our Test Ad">
-  <meta property="og:description" content="Shop now">
-  <meta property="og:image" content="https://i.ibb.co/tw7CxL7C/image.png">
-  <meta property="og:image:width" content="1200">
-  <meta property="og:image:height" content="630"> <!-- Adjust if your image dimensions differ -->
-  <meta property="og:url" content="https://powerful122.github.io/Test-Ad/">
-  <meta property="og:type" content="website">
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--bg-color);
+            color: white;
+            font-family: 'Playfair Display', serif;
+            overflow: hidden;
+        }
 
-  <!-- Twitter/X specific (summary_large_image = big preview image) -->
-  <meta name="twitter:card" content="summary_large_image">
-  <meta name="twitter:title" content="Our Test Ad">
-  <meta name="twitter:description" content="Shop now">
-  <meta name="twitter:image" content="https://i.ibb.co/tw7CxL7C/image.png">
+        #stage {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+        }
 
-  <!-- Short delay redirect: X crawler reads fast (<1s), users get redirected after 3s -->
-  <meta http-equiv="refresh" content="3; url=https://enkaare.com">
+        .scene {
+            position: absolute;
+            inset: 0;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            flex-direction: column;
+        }
 
-  <style>
-    body {
-      margin: 0;
-      background: #000;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      flex-direction: column;
-      font-family: Arial, sans-serif;
-      color: white;
-      text-align: center;
-    }
-    img {
-      max-width: 90%;
-      max-height: 75vh;
-      height: auto;
-      border-radius: 10px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
-    }
-    .button {
-      margin-top: 30px;
-      padding: 16px 50px;
-      background: #fff;
-      color: #000;
-      text-decoration: none;
-      font-weight: bold;
-      font-size: 1.4em;
-      border-radius: 50px;
-      transition: all 0.3s;
-    }
-    .button:hover { background: #ddd; transform: scale(1.05); }
-    .notice { margin-top: 20px; font-size: 1em; color: #ccc; }
-  </style>
+        .scene.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        /* Scene 1: Swimming Animation */
+        #canvas-container {
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at center, #3a8a96 0%, #2f7983 100%);
+        }
+
+        /* Explosion Text */
+        .explosion-text {
+            font-size: 8rem;
+            font-weight: 900;
+            letter-spacing: 1rem;
+            animation: textReveal 1s forwards;
+        }
+
+        @keyframes textReveal {
+            0% { transform: scale(0.5); filter: blur(10px); opacity: 0; }
+            100% { transform: scale(1); filter: blur(0); opacity: 1; }
+        }
+
+        /* Cursor */
+        #cursor {
+            position: fixed;
+            width: 24px;
+            height: 24px;
+            background: white;
+            border-radius: 50%;
+            border: 2px solid #2f7983;
+            pointer-events: none;
+            z-index: 9999;
+            transform: translate(-50%, -50%);
+            transition: all 0.1s linear;
+            box-shadow: 0 0 15px rgba(255,255,255,0.5);
+            display: none;
+        }
+        #cursor::after {
+            content: '';
+            position: absolute;
+            inset: -5px;
+            border: 1px solid white;
+            border-radius: 50%;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        /* UI Images */
+        .ui-img {
+            max-width: 90%;
+            max-height: 80%;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            object-fit: contain;
+        }
+
+        .scene-text {
+            font-size: 2.5rem;
+            margin-bottom: 2rem;
+            text-align: center;
+            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        /* Tornado Effect */
+        .tornado {
+            animation: tornadoAnim 1.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
+        }
+
+        @keyframes tornadoAnim {
+            0% { transform: rotate(0deg) scale(1); opacity: 1; filter: blur(0); }
+            50% { transform: rotate(720deg) scale(0.2); opacity: 0.5; filter: blur(10px); }
+            100% { transform: rotate(1440deg) scale(0); opacity: 0; filter: blur(20px); }
+        }
+
+        /* Finale */
+        .finale-logo {
+            width: 400px;
+            animation: finaleIn 2s cubic-bezier(0.17, 0.67, 0.83, 0.67) forwards;
+        }
+
+        @keyframes finaleIn {
+            0% { transform: scale(0) rotate(-10deg); opacity: 0; filter: brightness(2); }
+            60% { transform: scale(1.1) rotate(5deg); opacity: 1; filter: brightness(1.5); }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; filter: brightness(1); }
+        }
+
+        .sun-burst {
+            position: absolute;
+            width: 100vw;
+            height: 100vh;
+            background: radial-gradient(circle, white 0%, transparent 70%);
+            opacity: 0;
+            z-index: 1;
+        }
+    </style>
 </head>
 <body>
-  <img src="https://i.ibb.co/tw7CxL7C/image.png" alt="Our Test Ad">
 
-  <a href="https://enkaare.com" class="button">SHOP NOW</a>
+    <div id="cursor"></div>
 
-  <p class="notice">Redirecting automatically in a few seconds... or click SHOP NOW.</p>
+    <div id="stage">
+        <!-- Scene 0: Swimming -->
+        <div id="scene-0" class="scene active">
+            <canvas id="swimCanvas"></canvas>
+        </div>
 
-  <script>
-    setTimeout(() => { window.location.href = "https://enkaare.com"; }, 3000);
-  </script>
+        <!-- Scene 1: Explosion ENKARE -->
+        <div id="scene-1" class="scene">
+            <div class="explosion-text">ENKARE</div>
+        </div>
+
+        <!-- Scene 2: First Logo -->
+        <div id="scene-2" class="scene">
+            <img id="logo1" src="https://enkaare.com/assets/enkaare-logo-CyitWQQf.png" class="ui-img" style="width: 300px;">
+        </div>
+
+        <!-- Scene 3: Landing Page + Cursor Move to Login -->
+        <div id="scene-3" class="scene">
+            <img src="https://i.ibb.co/Z1VW7wgd/image.png" class="ui-img" id="img-landing">
+        </div>
+
+        <!-- Scene 4: Post a Job -->
+        <div id="scene-4" class="scene">
+            <img src="https://i.ibb.co/q3YFmWvj/image.png" class="ui-img" id="img-postjob">
+        </div>
+
+        <!-- Scene 5: Basic Details -->
+        <div id="scene-5" class="scene">
+            <h2 class="scene-text">Enter basic details.</h2>
+            <img src="https://i.ibb.co/vxV2MfHP/image.png" class="ui-img">
+        </div>
+
+        <!-- Scene 6: Location -->
+        <div id="scene-6" class="scene">
+            <h2 class="scene-text">Select Job Location and Category</h2>
+            <img src="https://i.ibb.co/VpY17qCZ/image.png" class="ui-img">
+        </div>
+
+        <!-- Scene 7: Currency -->
+        <div id="scene-7" class="scene">
+            <h2 class="scene-text">Select Your Preferred Currency and Payment Rate</h2>
+            <img src="https://i.ibb.co/TxgZVM56/image.png" class="ui-img">
+        </div>
+
+        <!-- Scene 8: Description -->
+        <div id="scene-8" class="scene">
+            <h2 class="scene-text">Add a Job Description and list Responsibilities</h2>
+            <img src="https://i.ibb.co/PvLBf79q/image.png" class="ui-img">
+        </div>
+
+        <!-- Scene 9: Post Your Job -->
+        <div id="scene-9" class="scene">
+            <h2 class="scene-text">Post Your Job</h2>
+            <img src="https://i.ibb.co/yBgVGF6t/image.png" class="ui-img">
+        </div>
+
+        <!-- Scene 10: Ready -->
+        <div id="scene-10" class="scene">
+            <h2 class="scene-text">Now you are Ready to hire your first top talent in minutes</h2>
+            <img src="https://i.ibb.co/gMrF9mXg/image.png" class="ui-img">
+        </div>
+
+        <!-- Scene 11: Finale -->
+        <div id="scene-11" class="scene">
+            <div class="sun-burst" id="finale-glow"></div>
+            <img src="https://enkaare.com/assets/logo%20enkaare-BsrzZVYM.png" class="finale-logo">
+        </div>
+    </div>
+
+    <script>
+        const cursor = document.getElementById('cursor');
+        
+        // --- SCENE MANAGER ---
+        let currentScene = 0;
+        function nextScene() {
+            const old = document.getElementById(`scene-${currentScene}`);
+            currentScene++;
+            const next = document.getElementById(`scene-${currentScene}`);
+            
+            if (old) old.classList.remove('active');
+            if (next) {
+                next.classList.add('active');
+                handleSceneLogic(currentScene);
+            }
+        }
+
+        async function moveCursor(x, y, click = false) {
+            cursor.style.display = 'block';
+            cursor.style.left = x + 'px';
+            cursor.style.top = y + 'px';
+            
+            await new Promise(r => setTimeout(r, 1000));
+            if (click) {
+                cursor.style.transform = 'translate(-50%, -50%) scale(0.8)';
+                await new Promise(r => setTimeout(r, 200));
+                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
+            }
+        }
+
+        function handleSceneLogic(index) {
+            switch(index) {
+                case 1: // Explosion
+                    setTimeout(nextScene, 2000);
+                    break;
+                case 2: // Logo 1
+                    setTimeout(() => {
+                        document.getElementById('logo1').classList.add('tornado');
+                        setTimeout(nextScene, 1500);
+                    }, 2000);
+                    break;
+                case 3: // Landing -> Move to Login (Approximated coordinates for "Login")
+                    moveCursor(window.innerWidth * 0.85, window.innerHeight * 0.08, true)
+                        .then(() => setTimeout(nextScene, 500));
+                    break;
+                case 4: // Post a Job (Approximated coordinates)
+                    moveCursor(window.innerWidth * 0.5, window.innerHeight * 0.5, true)
+                        .then(() => setTimeout(nextScene, 500));
+                    break;
+                case 5: case 6: case 7: case 8: case 9:
+                    cursor.style.display = 'none';
+                    setTimeout(nextScene, 2500);
+                    break;
+                case 10:
+                    setTimeout(nextScene, 3000);
+                    break;
+                case 11:
+                    document.getElementById('finale-glow').style.opacity = '0.4';
+                    break;
+            }
+        }
+
+        // --- CANVAS SWIMMING ANIMATION ---
+        const canvas = document.getElementById('swimCanvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        let swimmer = { x: -50, y: 0, angle: 0, t: 0 };
+
+        function initCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            swimmer.y = canvas.height / 2;
+        }
+
+        function animateSwim() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Meandering movement
+            swimmer.t += 0.05;
+            swimmer.x += 10;
+            swimmer.y += Math.sin(swimmer.t) * 15;
+
+            // Trail
+            particles.push({ x: swimmer.x, y: swimmer.y, r: 15, o: 1 });
+            
+            ctx.fillStyle = 'rgba(255,255,255,0.8)';
+            particles.forEach((p, i) => {
+                ctx.beginPath();
+                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+                ctx.fill();
+                p.r *= 0.95;
+                p.o -= 0.02;
+                if(p.o <= 0) particles.splice(i, 1);
+            });
+
+            // Main "Something"
+            ctx.shadowBlur = 20;
+            ctx.shadowColor = "white";
+            ctx.beginPath();
+            ctx.arc(swimmer.x, swimmer.y, 20, 0, Math.PI * 2);
+            ctx.fill();
+            ctx.shadowBlur = 0;
+
+            // Check for "collision" at center to trigger explosion
+            if (swimmer.x > canvas.width / 2) {
+                // EXPLOSION EFFECT
+                ctx.fillStyle = "white";
+                ctx.beginPath();
+                ctx.arc(canvas.width/2, canvas.height/2, 100, 0, Math.PI*2);
+                ctx.fill();
+                setTimeout(nextScene, 100);
+                return;
+            }
+
+            requestAnimationFrame(animateSwim);
+        }
+
+        window.addEventListener('resize', initCanvas);
+        window.onload = () => {
+            initCanvas();
+            animateSwim();
+        };
+    </script>
 </body>
 </html>
