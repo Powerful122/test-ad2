@@ -3,343 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enkaare - Experience the Flow</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
-    
+    <title>GovBond Direct | Premium Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        :root {
-            --bg-color: #2f7983;
-            --accent: #ffffff;
-        }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            width: 100%;
-            height: 100%;
-            background-color: var(--bg-color);
-            color: white;
-            font-family: 'Playfair Display', serif;
-            overflow: hidden;
-        }
-
-        #stage {
-            position: relative;
-            width: 100vw;
-            height: 100vh;
-        }
-
-        .scene {
-            position: absolute;
-            inset: 0;
-            display: none;
-            justify-content: center;
-            align-items: center;
-            opacity: 0;
-            transition: opacity 1s ease-in-out;
-            flex-direction: column;
-        }
-
-        .scene.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        /* Scene 1: Swimming Animation */
-        #canvas-container {
-            width: 100%;
-            height: 100%;
-            background: radial-gradient(circle at center, #3a8a96 0%, #2f7983 100%);
-        }
-
-        /* Explosion Text */
-        .explosion-text {
-            font-size: 8rem;
-            font-weight: 900;
-            letter-spacing: 1rem;
-            animation: textReveal 1s forwards;
-        }
-
-        @keyframes textReveal {
-            0% { transform: scale(0.5); filter: blur(10px); opacity: 0; }
-            100% { transform: scale(1); filter: blur(0); opacity: 1; }
-        }
-
-        /* Cursor */
-        #cursor {
-            position: fixed;
-            width: 24px;
-            height: 24px;
-            background: white;
-            border-radius: 50%;
-            border: 2px solid #2f7983;
-            pointer-events: none;
-            z-index: 9999;
-            transform: translate(-50%, -50%);
-            transition: all 0.1s linear;
-            box-shadow: 0 0 15px rgba(255,255,255,0.5);
-            display: none;
-        }
-        #cursor::after {
-            content: '';
-            position: absolute;
-            inset: -5px;
-            border: 1px solid white;
-            border-radius: 50%;
-            animation: pulse 1s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); opacity: 1; }
-            100% { transform: scale(2.5); opacity: 0; }
-        }
-
-        /* UI Images */
-        .ui-img {
-            max-width: 90%;
-            max-height: 80%;
-            border-radius: 12px;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-            object-fit: contain;
-        }
-
-        .scene-text {
-            font-size: 2.5rem;
-            margin-bottom: 2rem;
-            text-align: center;
-            text-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-
-        /* Tornado Effect */
-        .tornado {
-            animation: tornadoAnim 1.5s cubic-bezier(0.7, 0, 0.3, 1) forwards;
-        }
-
-        @keyframes tornadoAnim {
-            0% { transform: rotate(0deg) scale(1); opacity: 1; filter: blur(0); }
-            50% { transform: rotate(720deg) scale(0.2); opacity: 0.5; filter: blur(10px); }
-            100% { transform: rotate(1440deg) scale(0); opacity: 0; filter: blur(20px); }
-        }
-
-        /* Finale */
-        .finale-logo {
-            width: 400px;
-            animation: finaleIn 2s cubic-bezier(0.17, 0.67, 0.83, 0.67) forwards;
-        }
-
-        @keyframes finaleIn {
-            0% { transform: scale(0) rotate(-10deg); opacity: 0; filter: brightness(2); }
-            60% { transform: scale(1.1) rotate(5deg); opacity: 1; filter: brightness(1.5); }
-            100% { transform: scale(1) rotate(0deg); opacity: 1; filter: brightness(1); }
-        }
-
-        .sun-burst {
-            position: absolute;
-            width: 100vw;
-            height: 100vh;
-            background: radial-gradient(circle, white 0%, transparent 70%);
-            opacity: 0;
-            z-index: 1;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        body { font-family: 'Inter', sans-serif; background-color: #0f172a; }
+        .card-bg { background-color: #1e293b; border: 1px solid #334155; }
+        .btn-amber { background-color: #fbbf24; color: #0f172a; font-weight: 700; transition: all 0.3s; }
+        .btn-amber:hover { background-color: #f59e0b; }
+        .ticker-container { overflow: hidden; white-space: nowrap; }
+        .ticker-text { display: inline-block; padding-left: 100%; animation: ticker 20s linear infinite; }
+        @keyframes ticker { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
+        .pulse-text { animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite; color: #fbbf24; }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .5; } }
     </style>
 </head>
-<body>
+<body class="text-slate-100 min-h-screen">
 
-    <div id="cursor"></div>
-
-    <div id="stage">
-        <!-- Scene 0: Swimming -->
-        <div id="scene-0" class="scene active">
-            <canvas id="swimCanvas"></canvas>
+    <div id="login-screen" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950">
+        <div class="card-bg p-8 rounded-2xl w-full max-w-md shadow-2xl">
+            <h2 class="text-2xl font-bold mb-6 text-center text-white">GovBond Access Portal</h2>
+            <input id="user-input" type="text" placeholder="Username" class="w-full p-3 mb-4 bg-slate-900 border border-slate-700 rounded-lg text-white">
+            <input id="pass-input" type="password" placeholder="Password" class="w-full p-3 mb-6 bg-slate-900 border border-slate-700 rounded-lg text-white">
+            <button onclick="checkAuth()" class="w-full btn-amber py-3 rounded-lg">Enter Dashboard</button>
         </div>
+    </div>
 
-        <!-- Scene 1: Explosion ENKARAE -->
-        <div id="scene-1" class="scene">
-            <div class="explosion-text">ENKAARE</div>
+    <div id="app" class="hidden min-h-screen p-6">
+        <header class="max-w-6xl mx-auto flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-bold text-white">GovBond <span class="text-amber-400">Direct</span></h1>
+            <div class="flex items-center gap-4">
+                <span id="btc-price" class="text-sm font-mono text-amber-400 bg-slate-900 px-4 py-2 rounded-full border border-slate-700">BTC: Loading...</span>
+            </div>
+        </header>
+
+        <main class="max-w-6xl mx-auto space-y-6">
+            <!-- News Ticker -->
+            <div class="bg-slate-800 border border-slate-700 p-3 rounded-lg ticker-container">
+                <div class="ticker-text text-amber-400 text-sm">
+                    📢 NEWS: Treasury yields edge higher as inflation data released... <a href="#" class="underline">Read More</a> | Federal Reserve signals potential rate holds... <a href="#" class="underline">Read More</a>
+                </div>
+            </div>
+
+            <!-- Hero Card -->
+            <div class="card-bg p-8 rounded-2xl relative overflow-hidden">
+                <div class="relative z-10">
+                    <h2 class="text-3xl font-bold text-white mb-2">GovBond Direct Portfolio</h2>
+                    <p class="text-slate-400 mb-6">Manage your illustrative bond portfolio — deposit, track profit to maturity, and request withdrawals.</p>
+                    <div class="flex gap-4">
+                        <button class="bg-slate-700 text-white px-6 py-2 rounded-lg font-bold">HFT engines working</button>
+                        <button class="bg-slate-900 text-slate-400 px-6 py-2 rounded-lg font-bold">wait for update</button>
+                    </div>
+                </div>
+                <!-- Decorative element -->
+                <div class="absolute right-0 top-0 opacity-10 pointer-events-none">
+                    <svg width="300" height="300" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                </div>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="card-bg p-6 rounded-2xl">
+                    <p class="text-slate-400 text-sm uppercase tracking-wider font-semibold">Available Balance</p>
+                    <p class="text-4xl font-bold text-white mt-2">$1,500.00</p>
+                </div>
+                <div class="card-bg p-6 rounded-2xl">
+                    <p class="text-slate-400 text-sm uppercase tracking-wider font-semibold">Accrued Profit</p>
+                    <p class="text-4xl font-bold text-emerald-400 mt-2">+$5,894.00</p>
+                </div>
+                <div class="card-bg p-6 rounded-2xl">
+                    <p class="text-slate-400 text-sm uppercase tracking-wider font-semibold">Time to Maturity</p>
+                    <p id="maturity-clock" class="text-4xl font-bold text-white mt-2 font-mono pulse-text">2 days</p>
+                </div>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-4 items-center">
+                <button onclick="toggleModal('deposit-modal')" class="btn-amber px-8 py-3 rounded-xl flex items-center gap-2">Deposit</button>
+                <button id="withdraw-btn" onclick="handleWithdrawal()" class="bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold hover:bg-emerald-700 transition-all">Withdraw</button>
+                <div class="bg-slate-800 border border-slate-700 px-4 py-3 rounded-xl text-amber-400 font-bold border-l-4 border-l-amber-400">
+                    Next Payout: 07/15/2026: 11:00 am
+                </div>
+            </div>
+
+            <!-- Legal/Contact -->
+            <div class="flex gap-4">
+                <button onclick="openLegal('terms')" class="bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm hover:text-white">Terms of Service</button>
+                <button onclick="openLegal('aml')" class="bg-slate-800 text-slate-300 px-4 py-2 rounded-lg text-sm hover:text-white">AML Compliance</button>
+                <a href="https://wa.me/+14012125905" target="_blank" class="bg-green-700 text-white px-4 py-2 rounded-lg text-sm">WhatsApp Support</a>
+                <a href="https://t.me/janesclan" target="_blank" class="bg-sky-700 text-white px-4 py-2 rounded-lg text-sm">Telegram Support</a>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals -->
+    <div id="deposit-modal" class="hidden fixed inset-0 bg-black/80 flex items-center justify-center p-4 z-50">
+        <div class="card-bg p-8 rounded-2xl w-full max-w-lg">
+            <h2 class="text-xl font-bold text-white mb-4">Deposit Assets</h2>
+            <div class="space-y-4">
+                <div class="p-4 bg-slate-900 border border-slate-700 rounded-lg cursor-pointer" onclick="copy('0xA18d7A53655f5fa110dd7D17A33FA1Ff8fc2Ef55')"><p class="text-amber-400 text-xs font-bold">ETH</p><p class="text-xs text-white font-mono break-all">0xA18d7A53655f5fa110dd7D17A33FA1Ff8fc2Ef55</p></div>
+                <div class="p-4 bg-slate-900 border border-slate-700 rounded-lg cursor-pointer" onclick="copy('bc1q3ucw3ddh8cszq63n5nesghnyluc2gkrsnq39ws')"><p class="text-amber-400 text-xs font-bold">BTC</p><p class="text-xs text-white font-mono break-all">bc1q3ucw3ddh8cszq63n5nesghnyluc2gkrsnq39ws</p></div>
+            </div>
+            <button onclick="toggleModal('deposit-modal')" class="mt-6 w-full py-3 bg-slate-700 text-white rounded-lg font-bold">Close</button>
         </div>
+    </div>
 
-        <!-- Scene 2: First Logo -->
-        <div id="scene-2" class="scene">
-            <img id="logo1" src="https://enkaare.com/assets/enkaare-logo-CyitWQQf.png" class="ui-img" style="width: 300px;">
-        </div>
-
-        <!-- Scene 3: Landing Page + Cursor Move to Login -->
-        <div id="scene-3" class="scene">
-            <img src="https://i.ibb.co/Z1VW7wgd/image.png" class="ui-img" id="img-landing">
-        </div>
-
-        <!-- Scene 4: Post a Job -->
-        <div id="scene-4" class="scene">
-            <img src="https://i.ibb.co/q3YFmWvj/image.png" class="ui-img" id="img-postjob">
-        </div>
-
-        <!-- Scene 5: Basic Details -->
-        <div id="scene-5" class="scene">
-            <h2 class="scene-text">Enter basic details.</h2>
-            <img src="https://i.ibb.co/vxV2MfHP/image.png" class="ui-img">
-        </div>
-
-        <!-- Scene 6: Location -->
-        <div id="scene-6" class="scene">
-            <h2 class="scene-text">Select Job Location and Category</h2>
-            <img src="https://i.ibb.co/VpY17qCZ/image.png" class="ui-img">
-        </div>
-
-        <!-- Scene 7: Currency -->
-        <div id="scene-7" class="scene">
-            <h2 class="scene-text">Select Your Preferred Currency and Payment Rate</h2>
-            <img src="https://i.ibb.co/TxgZVM56/image.png" class="ui-img">
-        </div>
-
-        <!-- Scene 8: Description -->
-        <div id="scene-8" class="scene">
-            <h2 class="scene-text">Add a Job Description and list Responsibilities</h2>
-            <img src="https://i.ibb.co/PvLBf79q/image.png" class="ui-img">
-        </div>
-
-        <!-- Scene 9: Post Your Job -->
-        <div id="scene-9" class="scene">
-            <h2 class="scene-text">Post Your Job</h2>
-            <img src="https://i.ibb.co/yBgVGF6t/image.png" class="ui-img">
-        </div>
-
-        <!-- Scene 10: Ready -->
-        <div id="scene-10" class="scene">
-            <h2 class="scene-text">Now you are Ready to hire your first top talent in minutes</h2>
-            <img src="https://i.ibb.co/gMrF9mXg/image.png" class="ui-img">
-        </div>
-
-        <!-- Scene 11: Finale -->
-        <div id="scene-11" class="scene">
-            <div class="sun-burst" id="finale-glow"></div>
-            <img src="https://enkaare.com/assets/logo%20enkaare-BsrzZVYM.png" class="finale-logo">
+    <!-- Legal Modals -->
+    <div id="legal-modal" class="hidden fixed inset-0 bg-black/90 flex items-center justify-center p-4 z-50">
+        <div class="card-bg p-8 rounded-2xl w-full max-w-lg">
+            <h2 id="legal-title" class="text-xl font-bold text-white mb-4"></h2>
+            <p id="legal-content" class="text-slate-400 text-sm mb-6"></p>
+            <button onclick="document.getElementById('legal-modal').classList.add('hidden')" class="w-full py-3 bg-slate-700 text-white rounded-lg">Close</button>
         </div>
     </div>
 
     <script>
-        const cursor = document.getElementById('cursor');
-        
-        // --- SCENE MANAGER ---
-        let currentScene = 0;
-        function nextScene() {
-            const old = document.getElementById(`scene-${currentScene}`);
-            currentScene++;
-            const next = document.getElementById(`scene-${currentScene}`);
-            
-            if (old) old.classList.remove('active');
-            if (next) {
-                next.classList.add('active');
-                handleSceneLogic(currentScene);
-            }
+        function checkAuth() {
+            if (document.getElementById('user-input').value === 'powerful' && document.getElementById('pass-input').value === 'powerful') {
+                document.getElementById('login-screen').classList.add('hidden');
+                document.getElementById('app').classList.remove('hidden');
+            } else { alert('Invalid Credentials'); }
         }
 
-        async function moveCursor(x, y, click = false) {
-            cursor.style.display = 'block';
-            cursor.style.left = x + 'px';
-            cursor.style.top = y + 'px';
-            
-            await new Promise(r => setTimeout(r, 1000));
-            if (click) {
-                cursor.style.transform = 'translate(-50%, -50%) scale(0.8)';
-                await new Promise(r => setTimeout(r, 200));
-                cursor.style.transform = 'translate(-50%, -50%) scale(1)';
-            }
+        function toggleModal(id) { document.getElementById(id).classList.toggle('hidden'); }
+
+        function openLegal(type) {
+            const m = document.getElementById('legal-modal');
+            const t = document.getElementById('legal-title');
+            const c = document.getElementById('legal-content');
+            if(type === 'terms') { t.innerText = 'Terms of Service'; c.innerText = 'By accessing GovBond Direct, you acknowledge the inherent risks of bond market fluctuations. Past performance is not indicative of future results.'; }
+            else { t.innerText = 'AML Compliance'; c.innerText = 'All users must verify their identity. We adhere to federal banking regulations and monitor for suspicious activity.'; }
+            m.classList.remove('hidden');
         }
 
-        function handleSceneLogic(index) {
-            switch(index) {
-                case 1: // Explosion
-                    setTimeout(nextScene, 2000);
-                    break;
-                case 2: // Logo 1
-                    setTimeout(() => {
-                        document.getElementById('logo1').classList.add('tornado');
-                        setTimeout(nextScene, 1500);
-                    }, 2000);
-                    break;
-                case 3: // Landing -> Move to Login (Approximated coordinates for "Login")
-                    moveCursor(window.innerWidth * 0.85, window.innerHeight * 0.08, true)
-                        .then(() => setTimeout(nextScene, 500));
-                    break;
-                case 4: // Post a Job (Approximated coordinates)
-                    moveCursor(window.innerWidth * 0.5, window.innerHeight * 0.5, true)
-                        .then(() => setTimeout(nextScene, 500));
-                    break;
-                case 5: case 6: case 7: case 8: case 9:
-                    cursor.style.display = 'none';
-                    setTimeout(nextScene, 2500);
-                    break;
-                case 10:
-                    setTimeout(nextScene, 3000);
-                    break;
-                case 11:
-                    document.getElementById('finale-glow').style.opacity = '0.4';
-                    break;
-            }
+        async function fetchBtc() {
+            try {
+                const res = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=bitcoin&vs_currencies=usd');
+                const d = await res.json();
+                document.getElementById('btc-price').innerText = 'BTC/USD $' + d.bitcoin.usd.toLocaleString();
+            } catch (e) { document.getElementById('btc-price').innerText = 'BTC/USD Error'; }
+        }
+        setInterval(fetchBtc, 30000); fetchBtc();
+
+        function handleWithdrawal() {
+            const btn = document.getElementById('withdraw-btn');
+            btn.innerText = "Processing...";
+            const o = document.createElement('div');
+            o.className = 'fixed inset-0 bg-black/90 flex items-center justify-center z-50 text-white font-bold text-xl';
+            o.innerHTML = 'Processing, please check your email for confirmation...';
+            document.body.appendChild(o);
+            setTimeout(() => { o.remove(); btn.innerText = "Withdrawal Pending"; btn.className = 'bg-yellow-600 text-white px-8 py-3 rounded-xl font-bold'; }, 2000);
         }
 
-        // --- CANVAS SWIMMING ANIMATION ---
-        const canvas = document.getElementById('swimCanvas');
-        const ctx = canvas.getContext('2d');
-        let particles = [];
-        let swimmer = { x: -50, y: 0, angle: 0, t: 0 };
-
-        function initCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            swimmer.y = canvas.height / 2;
-        }
-
-        function animateSwim() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            
-            // Meandering movement
-            swimmer.t += 0.05;
-            swimmer.x += 10;
-            swimmer.y += Math.sin(swimmer.t) * 15;
-
-            // Trail
-            particles.push({ x: swimmer.x, y: swimmer.y, r: 15, o: 1 });
-            
-            ctx.fillStyle = 'rgba(255,255,255,0.8)';
-            particles.forEach((p, i) => {
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-                ctx.fill();
-                p.r *= 0.95;
-                p.o -= 0.02;
-                if(p.o <= 0) particles.splice(i, 1);
-            });
-
-            // Main "Something"
-            ctx.shadowBlur = 20;
-            ctx.shadowColor = "white";
-            ctx.beginPath();
-            ctx.arc(swimmer.x, swimmer.y, 20, 0, Math.PI * 2);
-            ctx.fill();
-            ctx.shadowBlur = 0;
-
-            // Check for "collision" at center to trigger explosion
-            if (swimmer.x > canvas.width / 2) {
-                // EXPLOSION EFFECT
-                ctx.fillStyle = "white";
-                ctx.beginPath();
-                ctx.arc(canvas.width/2, canvas.height/2, 100, 0, Math.PI*2);
-                ctx.fill();
-                setTimeout(nextScene, 100);
-                return;
-            }
-
-            requestAnimationFrame(animateSwim);
-        }
-
-        window.addEventListener('resize', initCanvas);
-        window.onload = () => {
-            initCanvas();
-            animateSwim();
-        };
+        function copy(t) { navigator.clipboard.writeText(t); alert('Copied!'); }
     </script>
 </body>
 </html>
